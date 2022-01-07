@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+ name: django
+spec:
+ serviceName: app-svc
+ replicas: 1
+ updateStrategy:
+   type: RollingUpdate
+ selector:
+   matchLabels:
+     app: django
+ template:
+   metadata:
+     labels:
+       app: django
+   spec:
+     volumes:
+      - name: nginx-conf
+        configMap:
+          name: nginx-conf 
+     terminationGracePeriodSeconds: 10
+     containers:
+       - name: nginx
+         imagePullPolicy: IfNotPresent
+         image: nginx:1.13
+         ports:
+          - containerPort: 80
+            name: nginx
+         volumeMounts:
+         - name: nginx-conf
+           mountPath: /etc/nginx/conf.d
+       - name: django
+         image: 080598/django-app:v1.1
+         command: ["/bin/sh", "-c"]
+         args:
+          - python manage.py makemigrations;
+            python manage.py migrate;
+            gunicorn mysite.wsgi --workers=1 --bind=0.0.0.0:8000;
+            # python manage.py runserver 0.0.0.0:8000;
+         imagePullPolicy: IfNotPresent
+         ports:
+         - name: app
+           containerPort: 8000
+         volumeMounts:
+         - name: django-data
+           mountPath: /static
+         
+   
+
+ volumeClaimTemplates:
+ - metadata:
+     name: django-data
+   spec:
+     accessModes: [ "ReadWriteOnce" ]
+     resources:
+       requests:
+         storage: 0.5Gi

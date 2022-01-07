@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% for artist in artists_and_labels %}
+        <p>Name: {{ artist.name }}, Label: {{ artist.label.name }}</p>
+    {% endfor %}
+    {% for artist in artists_and_release %}
+        <p>Name: {{ artist.name }}, releases: {{ artist.releases }}</p>
+    {% endfor %}
+
+    <script src="/static/js/jquery-2.1.4.min.js"></script>
+</body>
+
+</html>
+

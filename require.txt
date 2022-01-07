@@ -1,0 +1,5 @@
+django==1.11
+gunicorn==19.7.0
+django-brotli==0.1.3
+django-compression-middleware
+psycopg2>=2.7.5<2.8.0
